@@ -1,0 +1,48 @@
+[
+  {
+    "id": "SCN-001",
+    "category": "hidden_ownership",
+    "query": "Who is the ultimate beneficial owner of Meridian Holdings Ltd?",
+    "ground_truth": "Meridian Holdings Ltd is owned by BVI Shell Alpha, which is controlled by Kasarov Enterprises, which is owned by Viktor Kasarov.",
+    "expected_graphrag_advantage": "Requires 3-hop reconstruction. Vector RAG will only retrieve BVI Shell Alpha.",
+    "tags": [
+      "ownership",
+      "multi-hop",
+      "shell-company"
+    ]
+  },
+  {
+    "id": "SCN-002",
+    "category": "sanctions_exposure",
+    "query": "Does Vertex Capital have any indirect exposure to sanctioned entities?",
+    "ground_truth": "Yes, Vertex Capital funded Ocean Logistics, which shares directors with Harbor Group, which owns the sanctioned entity Red Star Shipping.",
+    "expected_graphrag_advantage": "Requires connecting loan -> shared director -> ownership. Vector RAG fails.",
+    "tags": [
+      "exposure",
+      "multi-hop",
+      "sanctions"
+    ]
+  },
+  {
+    "id": "SCN-003",
+    "category": "shared_infrastructure",
+    "query": "What links Horizon Group to sanctioned activities?",
+    "ground_truth": "Horizon Group shares a registered address (123 Offshore Blvd) with Phantom Logistics, a sanctioned entity.",
+    "expected_graphrag_advantage": "Edge overlap on address. Vectors often fail to associate the two companies.",
+    "tags": [
+      "infrastructure",
+      "address"
+    ]
+  },
+  {
+    "id": "SCN-004",
+    "category": "shortest_laundering_chain",
+    "query": "What is the shortest exposure chain between Jonathan Doe and Global Launderers LLC?",
+    "ground_truth": "Jonathan Doe wired money to Cayman Account 99X, held by Apex Ventures, which transacts with Global Launderers LLC.",
+    "expected_graphrag_advantage": "Shortest-path graph algorithm executes directly over edges.",
+    "tags": [
+      "shortest-path",
+      "laundering"
+    ]
+  }
+]

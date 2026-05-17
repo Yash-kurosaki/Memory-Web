@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.env
+.env.*
+backend/.env
+backend/.env.*
+!backend/.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+.DS_Store
+backend/venv/
+backend/.venv/
+backend/__pycache__/
+*.pyc
+data/vector_index.faiss

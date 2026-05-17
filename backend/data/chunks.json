@@ -1,0 +1,702 @@
+[
+  {
+    "id": "doc0",
+    "text": "Meridian Holdings Ltd is a logistics firm."
+  },
+  {
+    "id": "doc1",
+    "text": "Meridian Holdings Ltd is wholly owned by BVI Shell Alpha."
+  },
+  {
+    "id": "doc2",
+    "text": "BVI Shell Alpha's majority controller is Kasarov Enterprises."
+  },
+  {
+    "id": "doc3",
+    "text": "Viktor Kasarov is the sole owner of Kasarov Enterprises."
+  },
+  {
+    "id": "doc4",
+    "text": "Vertex Capital funded Ocean Logistics with a $5M loan."
+  },
+  {
+    "id": "doc5",
+    "text": "Ocean Logistics shares directors with Harbor Group."
+  },
+  {
+    "id": "doc6",
+    "text": "Harbor Group owns Red Star Shipping."
+  },
+  {
+    "id": "doc7",
+    "text": "Red Star Shipping is currently under sanctions."
+  },
+  {
+    "id": "doc8",
+    "text": "Horizon Group operates internationally and is registered at 123 Offshore Blvd."
+  },
+  {
+    "id": "doc9",
+    "text": "Phantom Logistics is a known sanctioned entity."
+  },
+  {
+    "id": "doc10",
+    "text": "Phantom Logistics lists its headquarters as 123 Offshore Blvd."
+  },
+  {
+    "id": "doc11",
+    "text": "Jonathan Doe initiated a wire transfer to Cayman Account 99X."
+  },
+  {
+    "id": "doc12",
+    "text": "Cayman Account 99X is held by Apex Ventures."
+  },
+  {
+    "id": "doc13",
+    "text": "Apex Ventures frequently transacts with Global Launderers LLC."
+  },
+  {
+    "id": "doc14",
+    "text": "Viktor Kasarov is a high-risk individual of interest."
+  },
+  {
+    "id": "doc15",
+    "text": "Kasarov Enterprises is wholly owned by Viktor Kasarov."
+  },
+  {
+    "id": "doc16",
+    "text": "BVI Shell Alpha is controlled by Kasarov Enterprises."
+  },
+  {
+    "id": "doc17",
+    "text": "BVI Shell Alpha owns Meridian Holdings Ltd, a logistics firm registered offshore."
+  },
+  {
+    "id": "noise0",
+    "text": "Rodriguez, Figueroa and Sanchez is a company registered in Burundi."
+  },
+  {
+    "id": "noise4",
+    "text": "Jonathan Johnson is a person registered in Congo."
+  },
+  {
+    "id": "noise7",
+    "text": "Account ZAYZ26542351161559 is a account registered in Estonia."
+  },
+  {
+    "id": "noise9",
+    "text": "Jamie Arnold is a person registered in Switzerland."
+  },
+  {
+    "id": "noise11",
+    "text": "Clark-Adams is a company registered in Vietnam."
+  },
+  {
+    "id": "noise12",
+    "text": "Account VUCT28327648350305 is a account registered in Iran."
+  },
+  {
+    "id": "noise14",
+    "text": "Account SWKG76724238849696 is a account registered in Guyana."
+  },
+  {
+    "id": "noise15",
+    "text": "Osborn and Sons is a company registered in Malawi."
+  },
+  {
+    "id": "noise16",
+    "text": "Account PCYB12269166978480 is a account registered in Pitcairn Islands."
+  },
+  {
+    "id": "noise19",
+    "text": "Phillip Ryan is a person registered in Slovakia (Slovak Republic)."
+  },
+  {
+    "id": "noise20",
+    "text": "Sellers, George and Burns is a company registered in Bouvet Island (Bouvetoya)."
+  },
+  {
+    "id": "noise25",
+    "text": "Brown, Jones and Johnson is a company registered in Greenland."
+  },
+  {
+    "id": "noise26",
+    "text": "Account CQHI73829973763116 is a account registered in Guinea."
+  },
+  {
+    "id": "noise28",
+    "text": "Nicholas Nunez is a person registered in Oman."
+  },
+  {
+    "id": "noise29",
+    "text": "Account DBMX51333872624731 is a account registered in Kenya."
+  },
+  {
+    "id": "noise33",
+    "text": "Carol Tucker is a person registered in Croatia."
+  },
+  {
+    "id": "noise34",
+    "text": "Hancock Trust is a trust registered in United Kingdom."
+  },
+  {
+    "id": "noise36",
+    "text": "Smith-Myers is a company registered in Vanuatu."
+  },
+  {
+    "id": "noise39",
+    "text": "Account QQFB81219136193990 is a account registered in Niger."
+  },
+  {
+    "id": "noise40",
+    "text": "Barnes PLC is a company registered in Mongolia."
+  },
+  {
+    "id": "noise42",
+    "text": "Cynthia Foster is a person registered in Paraguay."
+  },
+  {
+    "id": "noise44",
+    "text": "Smith PLC is a company registered in Mongolia."
+  },
+  {
+    "id": "noise46",
+    "text": "Contreras PLC is a company registered in French Southern Territories."
+  },
+  {
+    "id": "noise47",
+    "text": "Garcia, Humphrey and Baker is a company registered in Tuvalu."
+  },
+  {
+    "id": "noise48",
+    "text": "Juan Nelson is a person registered in Netherlands."
+  },
+  {
+    "id": "noise49",
+    "text": "Grant Watts is a person registered in Timor-Leste."
+  },
+  {
+    "id": "noise50",
+    "text": "Baker Trust is a trust registered in Liechtenstein."
+  },
+  {
+    "id": "noise52",
+    "text": "Account UNIB05242786801128 is a account registered in Argentina."
+  },
+  {
+    "id": "noise58",
+    "text": "Jennifer Oliver is a person registered in Cape Verde."
+  },
+  {
+    "id": "noise60",
+    "text": "Marsh Trust is a trust registered in Christmas Island."
+  },
+  {
+    "id": "noise63",
+    "text": "Doyle Trust is a trust registered in Grenada."
+  },
+  {
+    "id": "noise69",
+    "text": "Rivera, Johnson and Wiley is a company registered in Eritrea."
+  },
+  {
+    "id": "noise70",
+    "text": "Carpenter LLC is a company registered in Argentina."
+  },
+  {
+    "id": "noise72",
+    "text": "Edwards Trust is a trust registered in New Caledonia."
+  },
+  {
+    "id": "noise74",
+    "text": "Williams Trust is a trust registered in Jordan."
+  },
+  {
+    "id": "noise77",
+    "text": "Michelle Harmon is a person registered in Paraguay."
+  },
+  {
+    "id": "noise79",
+    "text": "Rush Trust is a trust registered in Uruguay."
+  },
+  {
+    "id": "noise80",
+    "text": "Erik Charles is a person registered in Saint Helena."
+  },
+  {
+    "id": "noise83",
+    "text": "Jason Bentley is a person registered in Philippines."
+  },
+  {
+    "id": "noise85",
+    "text": "Account FTSJ68044369957773 is a account registered in Malawi."
+  },
+  {
+    "id": "noise89",
+    "text": "Lee, Horton and Snyder is a company registered in Ecuador."
+  },
+  {
+    "id": "noise90",
+    "text": "Account EUWA16328708317278 is a account registered in Monaco."
+  },
+  {
+    "id": "noise92",
+    "text": "Stephanie Simmons is a person registered in United States of America."
+  },
+  {
+    "id": "noise94",
+    "text": "Account KKRC22362316658760 is a account registered in Costa Rica."
+  },
+  {
+    "id": "noise97",
+    "text": "Account PALJ66889373467065 is a account registered in Paraguay."
+  },
+  {
+    "id": "noise98",
+    "text": "Jennifer Martin is a person registered in Lao People's Democratic Republic."
+  },
+  {
+    "id": "noise101",
+    "text": "Account KYMI64170805310033 is a account registered in Taiwan."
+  },
+  {
+    "id": "noise102",
+    "text": "Account ATEH27193745299124 is a account registered in Botswana."
+  },
+  {
+    "id": "noise104",
+    "text": "Johnston-Odonnell is a company registered in Honduras."
+  },
+  {
+    "id": "noise109",
+    "text": "Graham Trust is a trust registered in Saint Martin."
+  },
+  {
+    "id": "noise110",
+    "text": "Marie Gilbert is a person registered in Uruguay."
+  },
+  {
+    "id": "noise112",
+    "text": "Account XSIK31473799650752 is a account registered in Libyan Arab Jamahiriya."
+  },
+  {
+    "id": "noise114",
+    "text": "Haynes, Hill and Smith is a company registered in Yemen."
+  },
+  {
+    "id": "noise121",
+    "text": "Torres PLC is a company registered in Heard Island and McDonald Islands."
+  },
+  {
+    "id": "noise122",
+    "text": "Account PRQL68557444313518 is a account registered in Zambia."
+  },
+  {
+    "id": "noise124",
+    "text": "Smith Trust is a trust registered in Martinique."
+  },
+  {
+    "id": "noise125",
+    "text": "Account EIBB84271094777520 is a account registered in El Salvador."
+  },
+  {
+    "id": "noise126",
+    "text": "Wilson-Jones is a company registered in Liechtenstein."
+  },
+  {
+    "id": "noise128",
+    "text": "Hernandez Trust is a trust registered in Mongolia."
+  },
+  {
+    "id": "noise130",
+    "text": "Account RYNT99386774964990 is a account registered in New Zealand."
+  },
+  {
+    "id": "noise131",
+    "text": "Garcia, Farmer and Garrett is a company registered in Estonia."
+  },
+  {
+    "id": "noise134",
+    "text": "Mcdaniel Trust is a trust registered in Uzbekistan."
+  },
+  {
+    "id": "noise138",
+    "text": "Hernandez Trust is a trust registered in Ethiopia."
+  },
+  {
+    "id": "noise140",
+    "text": "Account JTXS47174648877190 is a account registered in Tuvalu."
+  },
+  {
+    "id": "noise143",
+    "text": "Tiffany Key is a person registered in Peru."
+  },
+  {
+    "id": "noise146",
+    "text": "Zachary Graham is a person registered in Suriname."
+  },
+  {
+    "id": "noise147",
+    "text": "Costa-Harrison is a company registered in Ireland."
+  },
+  {
+    "id": "noise148",
+    "text": "Michael Hodge is a person registered in Greenland."
+  },
+  {
+    "id": "noise149",
+    "text": "Jenkins Trust is a trust registered in Lithuania."
+  },
+  {
+    "id": "noise151",
+    "text": "Hodges Trust is a trust registered in Argentina."
+  },
+  {
+    "id": "noise152",
+    "text": "Account OCKI51680876038597 is a account registered in Niue."
+  },
+  {
+    "id": "noise155",
+    "text": "Stanley Washington is a person registered in Antarctica (the territory South of 60 deg S)."
+  },
+  {
+    "id": "noise158",
+    "text": "Account ARNC31712748467737 is a account registered in Micronesia."
+  },
+  {
+    "id": "noise160",
+    "text": "Romero Trust is a trust registered in Turkmenistan."
+  },
+  {
+    "id": "noise163",
+    "text": "Dickerson Trust is a trust registered in Guam."
+  },
+  {
+    "id": "noise165",
+    "text": "Account SSVP27875588675339 is a account registered in Hungary."
+  },
+  {
+    "id": "noise166",
+    "text": "Hall Trust is a trust registered in Singapore."
+  },
+  {
+    "id": "noise169",
+    "text": "Account MMVZ27028951718702 is a account registered in Ireland."
+  },
+  {
+    "id": "noise170",
+    "text": "Pitts Trust is a trust registered in Cape Verde."
+  },
+  {
+    "id": "noise171",
+    "text": "Harrison LLC is a company registered in Guadeloupe."
+  },
+  {
+    "id": "noise172",
+    "text": "Schwartz, Santos and Christian is a company registered in Timor-Leste."
+  },
+  {
+    "id": "noise176",
+    "text": "Williams Trust is a trust registered in South Africa."
+  },
+  {
+    "id": "noise177",
+    "text": "Brown Trust is a trust registered in Guinea-Bissau."
+  },
+  {
+    "id": "noise178",
+    "text": "Brooks Trust is a trust registered in Cameroon."
+  },
+  {
+    "id": "noise180",
+    "text": "Sparks, Jackson and Miller is a company registered in Trinidad and Tobago."
+  },
+  {
+    "id": "noise181",
+    "text": "Michael Jimenez is a person registered in Myanmar."
+  },
+  {
+    "id": "noise185",
+    "text": "James LLC is a company registered in Morocco."
+  },
+  {
+    "id": "noise186",
+    "text": "Haney-Phillips is a company registered in Switzerland."
+  },
+  {
+    "id": "noise187",
+    "text": "Barrett Trust is a trust registered in Falkland Islands (Malvinas)."
+  },
+  {
+    "id": "noise188",
+    "text": "Sean Osborne is a person registered in Australia."
+  },
+  {
+    "id": "noise189",
+    "text": "Natasha Wall is a person registered in United Kingdom."
+  },
+  {
+    "id": "noise190",
+    "text": "Account JYZH95339421047095 is a account registered in Saint Martin."
+  },
+  {
+    "id": "noise191",
+    "text": "Davis LLC is a company registered in Greece."
+  },
+  {
+    "id": "noise192",
+    "text": "Account XNFG28588424745171 is a account registered in Cambodia."
+  },
+  {
+    "id": "noise193",
+    "text": "Account YHVX68516048175496 is a account registered in Swaziland."
+  },
+  {
+    "id": "noise195",
+    "text": "Account LDVH70985931746120 is a account registered in Yemen."
+  },
+  {
+    "id": "noise196",
+    "text": "Johnson Trust is a trust registered in Lithuania."
+  },
+  {
+    "id": "noise197",
+    "text": "Account DDHR26758692617964 is a account registered in Antigua and Barbuda."
+  },
+  {
+    "id": "noise198",
+    "text": "Vaughn Trust is a trust registered in Cuba."
+  },
+  {
+    "id": "noise199",
+    "text": "Account OOHL15850643171390 is a account registered in Australia."
+  },
+  {
+    "id": "noise200",
+    "text": "Sanchez-Martinez is a company registered in Mongolia."
+  },
+  {
+    "id": "noise201",
+    "text": "Ronald Spencer is a person registered in Namibia."
+  },
+  {
+    "id": "noise207",
+    "text": "Schultz Trust is a trust registered in Mexico."
+  },
+  {
+    "id": "noise208",
+    "text": "Jane Harper is a person registered in French Polynesia."
+  },
+  {
+    "id": "noise209",
+    "text": "Chavez Trust is a trust registered in Netherlands."
+  },
+  {
+    "id": "noise211",
+    "text": "Marilyn Mack is a person registered in Saint Helena."
+  },
+  {
+    "id": "noise212",
+    "text": "Account GNOH65766156545271 is a account registered in Bermuda."
+  },
+  {
+    "id": "noise213",
+    "text": "Account CCND52809885165604 is a account registered in Netherlands Antilles."
+  },
+  {
+    "id": "noise214",
+    "text": "Account JLDS83273158514936 is a account registered in Tanzania."
+  },
+  {
+    "id": "noise218",
+    "text": "Barnes Trust is a trust registered in Guam."
+  },
+  {
+    "id": "noise219",
+    "text": "Account FLJX59910229014767 is a account registered in New Caledonia."
+  },
+  {
+    "id": "noise221",
+    "text": "Account BAGJ32445107622683 is a account registered in Macao."
+  },
+  {
+    "id": "noise227",
+    "text": "Smith-Nguyen is a company registered in Spain."
+  },
+  {
+    "id": "noise228",
+    "text": "Meza Trust is a trust registered in Kuwait."
+  },
+  {
+    "id": "noise231",
+    "text": "Account HNSM81645352181883 is a account registered in United Kingdom."
+  },
+  {
+    "id": "noise232",
+    "text": "Bell-Mullen is a company registered in Oman."
+  },
+  {
+    "id": "noise234",
+    "text": "Gonzalez Trust is a trust registered in Netherlands."
+  },
+  {
+    "id": "noise235",
+    "text": "Hernandez Trust is a trust registered in Senegal."
+  },
+  {
+    "id": "noise236",
+    "text": "Jones, Bean and Burton is a company registered in Kyrgyz Republic."
+  },
+  {
+    "id": "noise241",
+    "text": "Leslie Bell is a person registered in Barbados."
+  },
+  {
+    "id": "noise242",
+    "text": "Collins Trust is a trust registered in Korea."
+  },
+  {
+    "id": "noise244",
+    "text": "Kathryn Rosario is a person registered in Korea."
+  },
+  {
+    "id": "noise247",
+    "text": "Schroeder Trust is a trust registered in Philippines."
+  },
+  {
+    "id": "noise248",
+    "text": "Account TBZU51518644925192 is a account registered in United States Virgin Islands."
+  },
+  {
+    "id": "noise249",
+    "text": "Bailey Trust is a trust registered in Palau."
+  },
+  {
+    "id": "noise250",
+    "text": "Hale Trust is a trust registered in India."
+  },
+  {
+    "id": "noise252",
+    "text": "Hansen-Schneider is a company registered in Greenland."
+  },
+  {
+    "id": "noise253",
+    "text": "Meagan Calderon is a person registered in Saint Vincent and the Grenadines."
+  },
+  {
+    "id": "noise255",
+    "text": "Gaines Trust is a trust registered in Bermuda."
+  },
+  {
+    "id": "noise257",
+    "text": "Account NQLA54235733221418 is a account registered in Sierra Leone."
+  },
+  {
+    "id": "noise258",
+    "text": "Account RXQB59296222927065 is a account registered in Philippines."
+  },
+  {
+    "id": "noise259",
+    "text": "Account XHOT47383473597746 is a account registered in Macao."
+  },
+  {
+    "id": "noise262",
+    "text": "Davis Trust is a trust registered in United States Minor Outlying Islands."
+  },
+  {
+    "id": "noise264",
+    "text": "Perry Group is a company registered in Macao."
+  },
+  {
+    "id": "noise265",
+    "text": "Brooks Trust is a trust registered in Hungary."
+  },
+  {
+    "id": "noise266",
+    "text": "Jade Johnson DVM is a person registered in Taiwan."
+  },
+  {
+    "id": "noise267",
+    "text": "Account WUKZ22047277901043 is a account registered in Syrian Arab Republic."
+  },
+  {
+    "id": "noise273",
+    "text": "Account TRAU89324609539621 is a account registered in Malta."
+  },
+  {
+    "id": "noise274",
+    "text": "Villegas Trust is a trust registered in Bangladesh."
+  },
+  {
+    "id": "noise275",
+    "text": "Kimberly Hartman is a person registered in Madagascar."
+  },
+  {
+    "id": "noise276",
+    "text": "Spencer Trust is a trust registered in Iceland."
+  },
+  {
+    "id": "noise278",
+    "text": "Brooks Trust is a trust registered in San Marino."
+  },
+  {
+    "id": "noise280",
+    "text": "Account ZECW70430305486874 is a account registered in Argentina."
+  },
+  {
+    "id": "noise282",
+    "text": "Account GJLY05415667652775 is a account registered in Uzbekistan."
+  },
+  {
+    "id": "noise283",
+    "text": "Salinas Trust is a trust registered in Ethiopia."
+  },
+  {
+    "id": "noise284",
+    "text": "Monica Miller is a person registered in Netherlands."
+  },
+  {
+    "id": "noise287",
+    "text": "Jeremy Robbins is a person registered in Chad."
+  },
+  {
+    "id": "noise288",
+    "text": "Heather Williams is a person registered in Trinidad and Tobago."
+  },
+  {
+    "id": "noise289",
+    "text": "Account LTNI01658202970213 is a account registered in Slovakia (Slovak Republic)."
+  },
+  {
+    "id": "noise290",
+    "text": "Brewer Trust is a trust registered in Guyana."
+  },
+  {
+    "id": "noise291",
+    "text": "Reyes Trust is a trust registered in Montenegro."
+  },
+  {
+    "id": "noise293",
+    "text": "Account EVOL57192856543102 is a account registered in Luxembourg."
+  },
+  {
+    "id": "noise294",
+    "text": "Holmes Trust is a trust registered in United States Minor Outlying Islands."
+  },
+  {
+    "id": "noise295",
+    "text": "Hoffman Trust is a trust registered in Estonia."
+  },
+  {
+    "id": "noise297",
+    "text": "Griffin, Davies and Mitchell is a company registered in United States Virgin Islands."
+  },
+  {
+    "id": "noise298",
+    "text": "Account PGDE17271551884422 is a account registered in South Africa."
+  },
+  {
+    "id": "noise299",
+    "text": "Ward Trust is a trust registered in Czech Republic."
+  }
+]
