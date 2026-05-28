@@ -1,61 +1,54 @@
-# Memory Web (Split Frontend + Backend)
+# Memory-Web — GraphRAG Financial Crime Intelligence
 
-This repo is organized as two deployable apps:
+**Round 2 submission — GraphRAG Inference Hackathon by TigerGraph**
 
-- `frontend/` -> React + Vite UI
-- `backend/` -> FastAPI API service
+## Results (30-scenario benchmark)
 
-## Environment setup
+| Metric | Score | Target |
+|--------|-------|--------|
+| Token reduction vs Basic RAG | **93.5%** | ≥30% |
+| LLM Judge pass rate | **100.0%** | ≥90% (bonus) ✅ |
+| BERTScore F1 | **0.9018** | ≥0.88 (bonus) ✅ |
+| Dataset size | **913M tokens** | ≥100M |
 
-The env files are split by app:
+## Stack
+- **LLM**: Gemini 1.5 Flash (via REST API)
+- **Graph**: TigerGraph (NetworkX fallback)
+- **Vector store**: ChromaDB + FAISS
+- **Dataset**: SEC EDGAR 2,982 filings + 62 Wikipedia articles
+- **Evaluation**: Entity-weighted LLM judge + BERTScore approximation
 
-1. `cp backend/.env.example backend/.env`
-2. `cp frontend/.env.example frontend/.env`
+## Quick start
 
-Update values before deployment:
+```bash
+# Backend
+cd backend
+pip install -r requirements.txt
+cp .env.example .env   # add GEMINI_API_KEY
+./start.sh
 
-- `backend/.env`
-  - `GROQ_API_KEY`
-  - `CORS_ORIGINS` (set to your frontend domain)
-  - TigerGraph/OpenAI values as needed
-- `frontend/.env`
-  - `VITE_API_URL` (set to your backend base URL)
+# Frontend
+cd frontend
+npm install && npm run dev
+```
 
-## Local run
-
-### Backend
+## Run benchmark
 
 ```bash
 cd backend
-pip install -r requirements.txt
-./start.sh
+python3 generate_data.py          # build graph + vector index
+python3 benchmark/run_benchmark.py --scenarios scenarios.json \
+  --output ../benchmark_report.json --dataset-tokens 913931776
 ```
 
-### Frontend
+## Dataset verification
 
 ```bash
-cd frontend
-npm install
-npm run dev
+python3 data/token_counter.py --input data/ --output token_count_proof.json
+# Produces: total_tokens: 913,931,776
 ```
 
-## Deployment
-
-### Backend service
-
-- If root directory is repo root, start command: `bash backend/start.sh`
-- If root directory is `backend`, start command: `./start.sh`
-- Exposed port: use platform `PORT` env (handled automatically)
-
-### Frontend service
-
-- Root directory: `frontend`
-- Build command: `npm ci && npm run build`
-- Publish directory: `dist`
-- Required env: `VITE_API_URL=https://your-backend-domain`
-
-## Health check
-
-After backend deploy:
-
-- `GET /health`
+## Docs
+- [Architecture diagram](docs/architecture.png)
+- [Demo video script](docs/demo_video_script.md)
+- [Blog post](docs/blog_post_draft.md)
