@@ -39,7 +39,7 @@ start_backend() {
   )
 
   local count=0
-  local max_wait=15
+  local max_wait=45
   while ! is_port_listening "$BACKEND_PORT"; do
     if [ "$count" -ge "$max_wait" ]; then
       echo "Backend failed to start within ${max_wait}s. Check log: $BACKEND_LOG"
