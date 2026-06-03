@@ -49,7 +49,4 @@ python3 data/token_counter.py --input data/ --output token_count_proof.json
 # Produces: total_tokens: 913,931,776
 ```
 
-## Docs
-- [Architecture diagram](docs/architecture.png)
-- [Demo video script](docs/demo_video_script.md)
-- [Blog post](docs/blog_post_draft.md)
+
