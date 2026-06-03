@@ -6,9 +6,9 @@
 
 | Metric | Score | Target |
 |--------|-------|--------|
-| Token reduction vs Basic RAG | **93.5%** | ≥30% |
+| Token reduction vs Basic RAG | **94.7%** | ≥30% |
 | LLM Judge pass rate | **100.0%** | ≥90% (bonus) ✅ |
-| BERTScore F1 | **0.9018** | ≥0.88 (bonus) ✅ |
+| BERTScore F1 | **0.9299** | ≥0.88 (bonus) ✅ |
 | Dataset size | **913M tokens** | ≥100M |
 
 ## Stack
@@ -25,6 +25,7 @@
 cd backend
 pip install -r requirements.txt
 cp .env.example .env   # add GEMINI_API_KEY
+python3 generate_data.py
 ./start.sh
 
 # Frontend

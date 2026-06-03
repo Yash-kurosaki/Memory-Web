@@ -157,3 +157,40 @@ export interface RunHistoryEntry {
 }
 
 export type DashboardView = 'overview' | 'evidence' | 'graph';
+
+export interface BenchmarkReportAggregate {
+  avg_token_reduction_vs_basic_rag: number;
+  llm_judge_pass_rate: number;
+  avg_bertscore_f1_raw: number;
+  bonus_judge_achieved: boolean;
+  bonus_bertscore_achieved: boolean;
+}
+
+export interface BenchmarkReportScenarioResult {
+  scenario_id: string;
+  query: string;
+  token_reduction_vs_basic_rag: number;
+  accuracy: {
+    llm_judge: {
+      passed: boolean;
+      score: number;
+      verdict: 'PASS' | 'FAIL' | string;
+    };
+    bertscore: {
+      f1_raw: number;
+      f1_rescaled: number;
+      passes_raw: boolean;
+      passes_rescaled: boolean;
+    };
+  };
+}
+
+export interface BenchmarkReport {
+  generated_at_utc: string;
+  dataset_tokens: number;
+  dataset_sources: string[];
+  token_counting_model: string;
+  scenarios_tested: number;
+  aggregate: BenchmarkReportAggregate;
+  results: BenchmarkReportScenarioResult[];
+}

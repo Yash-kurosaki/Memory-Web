@@ -13,12 +13,14 @@ from pydantic import BaseModel, Field
 
 from evaluation.bertscore import compute_bertscore
 from evaluation.llm_judge import evaluate_with_llm
+from benchmark.run_benchmark import run_full_benchmark
 from pipelines.graphrag import pipeline_graphrag
 from pipelines.llm_only import pipeline_llm_only
 from pipelines.vector_rag import pipeline_vector_rag
 
 router = APIRouter()
 SCENARIOS_PATH = Path(__file__).resolve().parent.parent / "scenarios.json"
+BENCHMARK_REPORT_PATH = Path(__file__).resolve().parent.parent.parent / "benchmark_report.json"
 PIPELINE_ORDER = ("LLM-Only", "Vector-RAG", "GraphRAG")
 
 
@@ -32,6 +34,12 @@ class SweepRequest(BaseModel):
     scenario_ids: list[str] | None = None
     runs_per_scenario: int = Field(default=3, ge=1, le=10)
     model: str | None = None
+
+
+class FullBenchmarkRequest(BaseModel):
+    scenarios_path: str | None = None
+    output_path: str | None = None
+    dataset_tokens: int = 0
 
 
 def _safe_pct_gain(baseline: float, value: float, lower_is_better: bool) -> float:
@@ -116,8 +124,8 @@ async def _evaluate_pipelines(
         )
 
         reduction = 0.0
-        if pipeline_name == "GraphRAG" and "LLM-Only" in results:
-            baseline_tokens = results["LLM-Only"].get("tokens_total", 0)
+        if pipeline_name == "GraphRAG" and "Vector-RAG" in results:
+            baseline_tokens = results["Vector-RAG"].get("tokens_total", 0)
             pipeline_tokens = results[pipeline_name].get("tokens_total", 0)
             if baseline_tokens > 0:
                 reduction = max(round((1 - (pipeline_tokens / baseline_tokens)) * 100, 2), 0)
@@ -193,12 +201,15 @@ def _compute_winner(
     cost_eff = _normalize(cost, lower_is_better=True)
     judge_eff = _normalize(judge, lower_is_better=False)
 
+    # Quality-first scoring: answer accuracy is the primary metric for this benchmark.
+    # A pipeline that gets the graph traversal right should win even if it takes longer.
+    # Weights: judge quality 50% | token efficiency 20% | cost efficiency 20% | latency 10%
     weighted = {
         name: (
-            0.25 * token_eff[name]
-            + 0.25 * latency_eff[name]
-            + 0.25 * cost_eff[name]
-            + 0.25 * judge_eff[name]
+            0.50 * judge_eff[name]
+            + 0.20 * token_eff[name]
+            + 0.20 * cost_eff[name]
+            + 0.10 * latency_eff[name]
         )
         for name in pipeline_names
     }
@@ -370,12 +381,13 @@ def _build_leaderboard(pipeline_aggregates: list[dict[str, Any]]) -> list[dict[s
         judge_eff = _min_max_efficiency(float(item["avg_judge_score"]), judge_values, lower_is_better=False)
         win_rate_eff = _min_max_efficiency(float(item["win_rate"]), win_values, lower_is_better=False)
 
+        # Quality-first: 50% judge quality, 20% win rate, 15% cost, 10% latency, 5% tokens
         weighted_index = (
-            (0.40 * judge_eff)
+            (0.50 * judge_eff)
             + (0.20 * win_rate_eff)
-            + (0.15 * latency_eff)
             + (0.15 * cost_eff)
-            + (0.10 * tokens_eff)
+            + (0.10 * latency_eff)
+            + (0.05 * tokens_eff)
         )
 
         scored.append(
@@ -570,3 +582,22 @@ async def run_benchmark_sweep(request: SweepRequest):
         "leaderboard": leaderboard,
         "graphrag_advantage_summary": _build_advantage_summary(pipeline_aggregates),
     }
+
+
+@router.post("/full-run")
+async def run_full_round2_benchmark(request: FullBenchmarkRequest):
+    scenarios_path = Path(request.scenarios_path).resolve() if request.scenarios_path else SCENARIOS_PATH
+    output_path = Path(request.output_path).resolve() if request.output_path else BENCHMARK_REPORT_PATH
+    report = await run_full_benchmark(scenarios_path, output_path, request.dataset_tokens)
+    return {"status": "success", "output_path": str(output_path), "report": report}
+
+
+@router.get("/report")
+def get_benchmark_report():
+    if not BENCHMARK_REPORT_PATH.exists():
+        raise HTTPException(status_code=404, detail="benchmark_report.json not found. Run /benchmark/full-run first.")
+    with BENCHMARK_REPORT_PATH.open("r", encoding="utf-8") as handle:
+        report = json.load(handle)
+        if report.get("dataset_tokens") == 0 and settings.DATASET_TOKEN_COUNT > 0:
+            report["dataset_tokens"] = settings.DATASET_TOKEN_COUNT
+        return report

@@ -8,6 +8,7 @@ import { useBenchmarkStream } from './hooks/useBenchmarkStream';
 import { useRunHistory } from './hooks/useRunHistory';
 import { useTheme } from './hooks/useTheme';
 import type {
+  BenchmarkReport,
   BenchmarkMode,
   DashboardView,
   Scenario,
@@ -51,6 +52,7 @@ export default function App() {
   const [snapshotNotice, setSnapshotNotice] = useState('');
 
   const [benchmarkMode, setBenchmarkMode] = useState<BenchmarkMode>('single');
+  const [benchmarkReport, setBenchmarkReport] = useState<BenchmarkReport | null>(null);
   const [sweepResults, setSweepResults] = useState<SweepResponse | null>(null);
   const [sweepIsRunning, setSweepIsRunning] = useState(false);
   const [sweepScenarioIds, setSweepScenarioIds] = useState<string[]>([]);
@@ -109,6 +111,28 @@ export default function App() {
       isCancelled = true;
     };
   }, [setErrorMessage]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const loadReport = async () => {
+      try {
+        const response = await axios.get<BenchmarkReport>(`${API_URL}/benchmark/report`);
+        if (!isCancelled) {
+          setBenchmarkReport(response.data);
+        }
+      } catch {
+        if (!isCancelled) {
+          setBenchmarkReport(null);
+        }
+      }
+    };
+
+    loadReport();
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
 
   const runSingleBenchmark = useCallback(async () => {
     setDashboardView('overview');
@@ -461,6 +485,7 @@ export default function App() {
           onGoHome={() => setPageMode('home')}
           themePreference={themePreference}
           onThemeChange={setThemePreference}
+          benchmarkReport={benchmarkReport}
         />
       )}
     </div>

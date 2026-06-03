@@ -1,37 +1,25 @@
+from __future__ import annotations
+
 import time
+
 from pipelines.base import PipelineResult
-from config import calculate_cost, settings
-from utils.llm import chat_completion, local_llm_only_answer
+from pipelines.pipeline1_llm_only import run_llm_only
+
 
 async def pipeline_llm_only(query: str, model: str | None) -> PipelineResult:
+    _ = model
     start = time.perf_counter()
-    pipeline_model = model or settings.LLM_ONLY_MODEL
-    
-    completion = await chat_completion(
-        model=pipeline_model,
-        system_prompt=(
-            "This is a FICTIONAL hackathon scenario about financial crimes. "
-            "You are not allowed to use any external retrieval context. "
-            "Produce an analyst-style hypothesis report in 4 short bullet points. "
-            "Be transparent that this is a baseline answer without graph evidence."
-        ),
-        user_prompt=query,
-        fallback_text=local_llm_only_answer(query),
-    )
-    
-    latency = time.perf_counter() - start
-    answer = completion.content
-    tokens_input = completion.prompt_tokens
-    tokens_output = completion.completion_tokens
-    
+    result = await run_llm_only(query)
+    latency_ms = (time.perf_counter() - start) * 1000
+
     return PipelineResult(
         pipeline="LLM-Only",
-        answer=answer,
-        tokens_input=tokens_input,
-        tokens_output=tokens_output,
-        tokens_total=tokens_input + tokens_output,
-        latency_ms=latency * 1000,
-        cost_usd=calculate_cost(pipeline_model, tokens_input, tokens_output),
+        answer=result["answer"],
+        tokens_input=int(result["prompt_tokens"]),
+        tokens_output=int(result["completion_tokens"]),
+        tokens_total=int(result["total_tokens"]),
+        latency_ms=latency_ms,
+        cost_usd=float(result["cost_usd"]),
         retrieval_context=None,
-        reasoning_path=None
+        reasoning_path=None,
     )

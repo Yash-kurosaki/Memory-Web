@@ -14,6 +14,7 @@ Dual-validation: TigerGraph result vs NetworkX result logged on mismatch.
 from __future__ import annotations
 
 import logging
+import os
 import time
 import urllib.parse
 from pathlib import Path
@@ -26,8 +27,20 @@ from config import settings
 logger = logging.getLogger(__name__)
 
 DATA_DIR    = Path(__file__).resolve().parent.parent / "data"
-RESTPP_BASE = f"http://{settings.TIGERGRAPH_HOST}:9000"
-GSQL_BASE   = f"http://{settings.TIGERGRAPH_HOST}:14240"
+
+# Savanna uses HTTPS + Bearer token. On-prem uses HTTP + basic auth.
+_TOKEN      = settings.TIGERGRAPH_TOKEN or os.environ.get("TIGERGRAPH_TOKEN", "")
+_USE_HTTPS  = bool(_TOKEN) or str(settings.TIGERGRAPH_PORT) == "443"
+_SCHEME     = "https" if _USE_HTTPS else "http"
+
+RESTT_PORT  = 443 if _USE_HTTPS else 9000
+GSQL_PORT   = settings.TIGERGRAPH_PORT  # 14240 on-prem, 443 Savanna
+
+RESTT_BASE  = f"{_SCHEME}://{settings.TIGERGRAPH_HOST}:{RESTT_PORT}"
+GSQL_BASE   = f"{_SCHEME}://{settings.TIGERGRAPH_HOST}:{GSQL_PORT}"
+RESTTP_BASE = RESTT_BASE  # legacy alias
+RESTPP_BASE = RESTT_BASE  # alias used in __init__
+
 GRAPH       = settings.TIGERGRAPH_GRAPH
 _AUTH       = (settings.TIGERGRAPH_USERNAME, settings.TIGERGRAPH_PASSWORD)
 
@@ -39,6 +52,18 @@ _EGO_MAX_NEIGHBORS = 30
 _TIMEOUT    = 8
 
 
+def _get_headers() -> dict:
+    """Return auth headers — Bearer token for Savanna, empty dict for on-prem (uses _AUTH)."""
+    if _TOKEN:
+        return {"Authorization": f"Bearer {_TOKEN}"}
+    return {}
+
+
+def _get_auth():
+    """Return requests auth tuple for on-prem, None for Savanna (uses header token)."""
+    return None if _TOKEN else _AUTH
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Startup connectivity probe
 # ─────────────────────────────────────────────────────────────────────────────
@@ -46,18 +71,26 @@ _TIMEOUT    = 8
 def _probe_tigergraph() -> bool:
     """Return True if REST++ is reachable AND FinancialCrimeGraph schema exists."""
     try:
-        r = requests.get(f"{RESTPP_BASE}/echo", timeout=3)
-        if r.status_code != 200:
-            return False
-        # Confirm the graph schema has been loaded (Entity vertex exists)
+        # Savanna: ping via /echo on RESTPP, or /api/ping on GSQL
+        probe_url = f"{RESTT_BASE}/echo"
+        r = requests.get(probe_url, headers=_get_headers(), auth=_get_auth(), timeout=5)
+        if r.status_code not in (200, 401):
+            # Try Savanna-style ping
+            r = requests.get(
+                f"{GSQL_BASE}/api/ping",
+                headers=_get_headers(), timeout=5
+            )
+            if r.status_code != 200:
+                return False
+        # Confirm the graph schema has been loaded
         r2 = requests.get(
             f"{GSQL_BASE}/gsql/v1/schema/graphs/{GRAPH}",
-            auth=_AUTH, timeout=5
+            headers=_get_headers(), auth=_get_auth(), timeout=8
         )
         if r2.status_code != 200:
             logger.warning(
-                "[TigerGraph] REST++ reachable but graph '%s' not found. "
-                "Run database/setup_tigergraph.py to create and load the graph.",
+                "[TigerGraph] Reachable but graph '%s' not found. "
+                "Run database/load_to_tigergraph.py to create and load the graph.",
                 GRAPH,
             )
             return False
@@ -77,12 +110,12 @@ def _probe_tigergraph() -> bool:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _vertex_url(vid: str) -> str:
-    return f"{RESTPP_BASE}/graph/{GRAPH}/vertices/Entity/{urllib.parse.quote(vid, safe='')}"
+    return f"{RESTT_BASE}/graph/{GRAPH}/vertices/Entity/{urllib.parse.quote(vid, safe='')}"
 
 
 def _edges_url(vid: str, limit: int = _EGO_MAX_NEIGHBORS) -> str:
     return (
-        f"{RESTPP_BASE}/graph/{GRAPH}/edges/Entity/"
+        f"{RESTT_BASE}/graph/{GRAPH}/edges/Entity/"
         f"{urllib.parse.quote(vid, safe='')}/RELATIONSHIP"
         f"?limit={limit}"
     )
@@ -91,7 +124,7 @@ def _edges_url(vid: str, limit: int = _EGO_MAX_NEIGHBORS) -> str:
 def _get_vertex(vid: str) -> dict | None:
     """Fetch a single vertex by ID. Returns attribute dict or None."""
     try:
-        r = requests.get(_vertex_url(vid), auth=_AUTH, timeout=_TIMEOUT)
+        r = requests.get(_vertex_url(vid), headers=_get_headers(), auth=_get_auth(), timeout=_TIMEOUT)
         results = r.json().get("results", [])
         return results[0] if results else None
     except Exception as exc:
@@ -105,7 +138,7 @@ def _get_neighbors(vid: str) -> list[dict]:
     Reverse edges are stored with REV_ prefix on relation — we strip it for display.
     """
     try:
-        r = requests.get(_edges_url(vid), auth=_AUTH, timeout=_TIMEOUT)
+        r = requests.get(_edges_url(vid), headers=_get_headers(), auth=_get_auth(), timeout=_TIMEOUT)
         neighbors = []
         seen: set[str] = set()
         for e in r.json().get("results", []):
@@ -233,23 +266,26 @@ def _tg_ego_graph(entities: list[str], depth: int = _EGO_DEPTH) -> dict:
 
     Strategy:
     - BFS from each seed entity up to `depth` hops
-    - Collect all visited vertices and edges
-    - Limit to _EGO_MAX_NEIGHBORS per vertex (keeps context compact)
+    - Keep track of shortest path distance from seeds
+    - Sort nodes by distance and ID
+    - Cap to top 15 closest nodes to keep token count compact
+    - Keep only edges within this 15-node subgraph
 
     Returns { nodes, edges, path, source }
     """
     t0 = time.perf_counter()
     logger.info("[TigerGraph:EGO] Starting ego-graph: seeds=%s depth=%d", entities, depth)
 
-    visited_vids: set[str] = set()
-    all_edges: list[dict] = []
+    node_distances: dict[str, int] = {}
+    all_edges_discovered: list[dict] = []
     edge_set: set[tuple[str, str]] = set()
 
     for seed in entities:
         frontier: set[str] = {seed}
-        visited_vids.add(seed)
+        if seed not in node_distances:
+            node_distances[seed] = 0
 
-        for _ in range(max(1, depth)):
+        for h in range(1, max(1, depth) + 1):
             next_frontier: set[str] = set()
             for vid in frontier:
                 neighbors = _get_neighbors(vid)
@@ -259,37 +295,52 @@ def _tg_ego_graph(entities: list[str], depth: int = _EGO_DEPTH) -> dict:
                     key  = (vid, nbid)
                     if key not in edge_set:
                         edge_set.add(key)
-                        all_edges.append({"source": vid, "target": nbid, "type": rel})
-                    if nbid not in visited_vids:
-                        visited_vids.add(nbid)
+                        all_edges_discovered.append({"source": vid, "target": nbid, "type": rel})
+                    
+                    if nbid not in node_distances:
+                        node_distances[nbid] = h
                         next_frontier.add(nbid)
+                    else:
+                        node_distances[nbid] = min(node_distances[nbid], h)
             frontier = next_frontier
 
-    latency_ms = (time.perf_counter() - t0) * 1000
-    logger.info(
-        "[TigerGraph:EGO] Done: %d vertices, %d edges, %.1fms",
-        len(visited_vids), len(all_edges), latency_ms,
-    )
+    # Sort all reached nodes by distance, then alphabetically
+    sorted_nodes = sorted(node_distances.keys(), key=lambda n: (node_distances[n], n))
+    # Cap to top 15
+    subgraph_nodes = set(sorted_nodes[:15])
 
-    # Fetch vertex attributes (batch)
+    # Filter edges to only those connecting nodes in the capped subgraph
+    filtered_edges: list[dict] = []
+    for edge in all_edges_discovered:
+        if edge["source"] in subgraph_nodes and edge["target"] in subgraph_nodes:
+            filtered_edges.append(edge)
+
+    # Fetch vertex attributes for the capped subgraph nodes
     nodes_data: list[dict] = []
-    for vid in sorted(visited_vids):
+    for vid in sorted(subgraph_nodes):
         v = _get_vertex(vid)
         if v:
             nodes_data.append(_vertex_to_node(vid, v.get("attributes", {})))
         else:
             nodes_data.append({"id": vid, "type": "Entity", "risk_score": 0})
 
+    latency_ms = (time.perf_counter() - t0) * 1000
+    logger.info(
+        "[TigerGraph:EGO] Done (capped to 15): %d vertices, %d edges, %.1fms",
+        len(subgraph_nodes), len(filtered_edges), latency_ms,
+    )
+
     # Ordered path = entity seeds first, then rest alphabetically
-    path = list(entities) + [v for v in sorted(visited_vids) if v not in entities]
+    path = list(entities) + [v for v in sorted(subgraph_nodes) if v not in entities]
 
     return {
         "nodes":  nodes_data,
-        "edges":  all_edges,
-        "path":   path[:20],   # cap for compact serialization
+        "edges":  filtered_edges,
+        "path":   path[:15],
         "source": "TigerGraph",
         "latency_ms": latency_ms,
     }
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -331,15 +382,20 @@ def _nx_shortest_path(nx_graph: nx.DiGraph, source: str, target: str) -> dict:
 
 def _nx_ego_graph(nx_graph: nx.DiGraph, entities: list[str], depth: int) -> dict:
     nx_undirected = nx_graph.to_undirected()
-    subgraph_nodes: set[str] = set()
+    node_distances: dict[str, int] = {}
     for entity in entities:
         if entity in nx_graph:
             lengths = nx.single_source_shortest_path_length(
                 nx_undirected, source=entity, cutoff=max(1, depth)
             )
-            subgraph_nodes.update(lengths.keys())
+            for node, dist in lengths.items():
+                node_distances[node] = min(node_distances.get(node, 999), dist)
+    
+    sorted_nodes = sorted(node_distances.keys(), key=lambda n: (node_distances[n], n))
+    subgraph_nodes = set(sorted_nodes[:15])
+    
     payload = _build_graph_payload(nx_graph, subgraph_nodes)
-    payload["path"] = list(entities) + [n for n in subgraph_nodes if n not in entities]
+    payload["path"] = list(entities) + [n for n in sorted_nodes[:15] if n not in entities]
     payload["source"] = "NetworkX"
     return payload
 

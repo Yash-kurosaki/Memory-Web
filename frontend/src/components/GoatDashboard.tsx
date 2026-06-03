@@ -13,12 +13,17 @@ import {
   Zap,
 } from 'lucide-react';
 import type {
+  BenchmarkReport,
   EvaluationResult,
   PipelineResult,
   SummaryResult,
 } from '../types/benchmark';
 import type { SweepPresentationSummary } from '../utils/sweep';
 import ScrollableRegion from './ScrollableRegion';
+import AccuracyPanel from './AccuracyPanel';
+import BenchmarkTable from './BenchmarkTable';
+import DatasetStats from './DatasetStats';
+import TokenReductionBadge from './TokenReductionBadge';
 
 const EfficiencyChart = lazy(() => import('./EfficiencyChart'));
 
@@ -37,6 +42,7 @@ interface GoatDashboardProps {
   onDownloadSnapshot: () => void;
   onDownloadSnapshotPng: () => void;
   sweepSummary: SweepPresentationSummary | null;
+  benchmarkReport?: BenchmarkReport | null;
 }
 
 export default function GoatDashboard({
@@ -52,6 +58,7 @@ export default function GoatDashboard({
   onDownloadSnapshot,
   onDownloadSnapshotPng,
   sweepSummary,
+  benchmarkReport,
 }: GoatDashboardProps) {
   const graphAggregate = sweepSummary?.pipeline.GraphRAG;
   const investigationInsight = useMemo(
@@ -61,6 +68,12 @@ export default function GoatDashboard({
 
   return (
     <>
+      <section className="grid gap-3 lg:grid-cols-3">
+        <DatasetStats benchmarkReport={benchmarkReport ?? null} />
+        <TokenReductionBadge summary={summary} results={results} />
+        <AccuracyPanel graphEvaluation={evaluations.GraphRAG} benchmarkReport={benchmarkReport ?? null} />
+      </section>
+
       <section className="rounded-2xl border border-[var(--gp-border)] bg-[var(--gp-surface)] px-4 py-3 shadow-sm shadow-black/5 transition-all duration-200 hover:shadow-md">
         <div className="grid gap-2 md:grid-cols-2">
           <div>
@@ -239,6 +252,8 @@ export default function GoatDashboard({
           {Object.keys(results).length > 1 && (
             <TokenCostTable results={results} />
           )}
+
+          <BenchmarkTable benchmarkReport={benchmarkReport ?? null} />
         </>
       ) : (
         <section className="rounded-2xl border border-[var(--gp-border)] bg-[var(--gp-surface)] p-4 text-sm text-[var(--gp-text-muted)] shadow-sm shadow-black/5 transition-all duration-200 hover:shadow-md">

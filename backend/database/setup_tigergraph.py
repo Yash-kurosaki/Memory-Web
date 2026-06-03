@@ -156,11 +156,13 @@ def load_edges(edges: list[dict]) -> None:
             tgt = e["target"]
             rel = e["relation"]
             if src not in edges_payload["edges"]["Entity"]:
-                edges_payload["edges"]["Entity"][src] = {"RELATIONSHIP": {}}
+                edges_payload["edges"]["Entity"][src] = {"RELATIONSHIP": {"Entity": {}}}
             if "RELATIONSHIP" not in edges_payload["edges"]["Entity"][src]:
-                edges_payload["edges"]["Entity"][src]["RELATIONSHIP"] = {}
-            edges_payload["edges"]["Entity"][src]["RELATIONSHIP"][tgt] = {
-                "Entity": {"relation": {"value": rel}}
+                edges_payload["edges"]["Entity"][src]["RELATIONSHIP"] = {"Entity": {}}
+            if "Entity" not in edges_payload["edges"]["Entity"][src]["RELATIONSHIP"]:
+                edges_payload["edges"]["Entity"][src]["RELATIONSHIP"]["Entity"] = {}
+            edges_payload["edges"]["Entity"][src]["RELATIONSHIP"]["Entity"][tgt] = {
+                "relation": {"value": rel}
             }
         result = restpp("POST", f"/graph/{GRAPH}", edges_payload)
         accepted = result.get("results", [{}])

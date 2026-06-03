@@ -1,16 +1,40 @@
 node_modules/
 dist/
-.env
-.env.*
-backend/.env
-backend/.env.*
-!backend/.env.example
-frontend/.env
-frontend/.env.*
-!frontend/.env.example
 .DS_Store
+
+# Python
 backend/venv/
 backend/.venv/
 backend/__pycache__/
 *.pyc
-data/vector_index.faiss
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Generated backend data artifacts
+backend/data/sec_edgar/
+backend/data/wikipedia/
+backend/data/vector_index.faiss
+
+# Chroma / Vector DB
+backend/chroma_db/
+backend/faiss_index/
+chroma_db/
+faiss_index/
+
+# Token proof
+/token_count_proof.json
+
+# Benchmark outputs
+benchmark_report.json
+benchmark_results/

@@ -28,6 +28,7 @@ import {
   YAxis,
 } from 'recharts';
 import type {
+  BenchmarkReport,
   BenchmarkMode,
   DashboardView,
   EvaluationResult,
@@ -40,6 +41,7 @@ import type { ThemePreference } from '../hooks/useTheme';
 import type { SweepPresentationSummary } from '../utils/sweep';
 import { buildGraphRagTrendData } from '../utils/sweep';
 import GraphVisualization from './GraphVisualization';
+import GraphVizPanel from './GraphVizPanel';
 import GoatDashboard from './GoatDashboard';
 import RunHistoryTimeline from './RunHistoryTimeline';
 import ScrollableRegion from './ScrollableRegion';
@@ -85,6 +87,7 @@ interface BenchmarkWorkspaceProps {
   onGoHome: () => void;
   themePreference: ThemePreference;
   onThemeChange: (theme: ThemePreference) => void;
+  benchmarkReport: BenchmarkReport | null;
 }
 
 const quickQueries = [
@@ -146,6 +149,7 @@ export default function BenchmarkWorkspace({
   onGoHome,
   themePreference,
   onThemeChange,
+  benchmarkReport,
 }: BenchmarkWorkspaceProps) {
   const graphResult = results.GraphRAG;
   const reasoningPath = graphResult?.reasoning_path ?? [];
@@ -457,6 +461,7 @@ export default function BenchmarkWorkspace({
             onDownloadSnapshot={onDownloadSnapshot}
             onDownloadSnapshotPng={onDownloadSnapshotPng}
             sweepSummary={sweepSummary}
+            benchmarkReport={benchmarkReport}
           />
 
           <RunHistoryTimeline runHistory={runHistory} />
@@ -652,7 +657,9 @@ export default function BenchmarkWorkspace({
       )}
 
       {dashboardView === 'graph' && benchmarkMode === 'single' && graphResult?.graph_nodes && graphResult.graph_nodes.length > 0 && (
-        <section className="overflow-hidden rounded-2xl border border-[var(--gp-border)] bg-[var(--gp-surface)] shadow-sm shadow-black/5 transition-all duration-200 hover:shadow-md">
+        <section className="space-y-4">
+          <GraphVizPanel nodes={graphResult.graph_nodes} edges={graphResult.graph_edges ?? []} height={graphCanvasHeight} />
+          <section className="overflow-hidden rounded-2xl border border-[var(--gp-border)] bg-[var(--gp-surface)] shadow-sm shadow-black/5 transition-all duration-200 hover:shadow-md">
           {/* Header */}
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--gp-border)] px-5 py-3.5">
             <h3 className="flex items-center gap-2 text-sm font-black tracking-wide text-[var(--gp-text)]">
@@ -715,6 +722,7 @@ export default function BenchmarkWorkspace({
               </p>
             </div>
           )}
+        </section>
         </section>
       )}
 
