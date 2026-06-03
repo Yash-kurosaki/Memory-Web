@@ -38,8 +38,12 @@ GSQL_PORT   = settings.TIGERGRAPH_PORT  # 14240 on-prem, 443 Savanna
 
 RESTT_BASE  = f"{_SCHEME}://{settings.TIGERGRAPH_HOST}:{RESTT_PORT}"
 GSQL_BASE   = f"{_SCHEME}://{settings.TIGERGRAPH_HOST}:{GSQL_PORT}"
-RESTTP_BASE = RESTT_BASE  # legacy alias
 RESTPP_BASE = RESTT_BASE  # alias used in __init__
+
+# Savanna 4.x routes REST++ data ops under /restpp/ prefix
+# On-prem CE uses / directly
+_IS_SAVANNA = bool(_TOKEN) or str(settings.TIGERGRAPH_PORT) == "443"
+_RESTPP_PREFIX = "/restpp" if _IS_SAVANNA else ""
 
 GRAPH       = settings.TIGERGRAPH_GRAPH
 _AUTH       = (settings.TIGERGRAPH_USERNAME, settings.TIGERGRAPH_PASSWORD)
@@ -53,7 +57,7 @@ _TIMEOUT    = 8
 
 
 def _get_headers() -> dict:
-    """Return auth headers — Bearer token for Savanna, empty dict for on-prem (uses _AUTH)."""
+    """Return auth headers — Bearer JWT token for Savanna, empty dict for on-prem (uses _AUTH)."""
     if _TOKEN:
         return {"Authorization": f"Bearer {_TOKEN}"}
     return {}
@@ -110,12 +114,12 @@ def _probe_tigergraph() -> bool:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _vertex_url(vid: str) -> str:
-    return f"{RESTT_BASE}/graph/{GRAPH}/vertices/Entity/{urllib.parse.quote(vid, safe='')}"
+    return f"{RESTT_BASE}{_RESTPP_PREFIX}/graph/{GRAPH}/vertices/Entity/{urllib.parse.quote(vid, safe='')}"
 
 
 def _edges_url(vid: str, limit: int = _EGO_MAX_NEIGHBORS) -> str:
     return (
-        f"{RESTT_BASE}/graph/{GRAPH}/edges/Entity/"
+        f"{RESTT_BASE}{_RESTPP_PREFIX}/graph/{GRAPH}/edges/Entity/"
         f"{urllib.parse.quote(vid, safe='')}/RELATIONSHIP"
         f"?limit={limit}"
     )

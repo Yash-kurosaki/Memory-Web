@@ -44,7 +44,15 @@ if not TOKEN:
 
 SCHEME   = "https" if (TOKEN or str(PORT) == "443") else "http"
 BASE_URL = f"{SCHEME}://{HOST}:{PORT}"
-HEADERS  = {"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"}
+# Savanna 4.x routes data operations under /restpp/, schema under /gsql/v1/
+# Legacy CE uses /graph/ directly at the root
+IS_SAVANNA = (str(PORT) == "443" or TOKEN)
+RESTATUS_PREFIX = "/restpp" if IS_SAVANNA else ""
+HEADERS  = {
+    "Authorization": f"Bearer {TOKEN}",
+    "Content-Type": "application/json",
+}
+
 
 DATA_DIR = BACKEND_DIR / "data"
 GML_FILE = DATA_DIR / "graph.gml"
@@ -71,27 +79,8 @@ def _check_connection() -> None:
 
 
 def _create_schema() -> None:
-    """Create the FinancialCrimeGraph schema via GSQL REST API."""
-    print(f"📐 Creating schema for graph '{GRAPH}' ...")
-    gsql = f"""
-USE GLOBAL
-CREATE VERTEX Entity (PRIMARY_ID vid STRING, entity_type STRING, risk_score INT)
-  WITH primary_id_as_attribute="true"
-CREATE DIRECTED EDGE RELATIONSHIP (FROM Entity, TO Entity, relation STRING)
-  WITH REVERSE_EDGE="REV_RELATIONSHIP"
-CREATE GRAPH {GRAPH} (Entity, RELATIONSHIP, REV_RELATIONSHIP)
-"""
-    r = requests.post(
-        f"{BASE_URL}/gsqlserver/gsql/file",
-        headers={**HEADERS, "Content-Type": "text/plain"},
-        data=gsql,
-        timeout=30,
-    )
-    if r.status_code in (200, 409):
-        print(f"   ✓ Schema ready (status {r.status_code})")
-    else:
-        print(f"   ⚠ Schema response {r.status_code}: {r.text[:300]}")
-        print("   (Continuing — schema may already exist)")
+    """Skip schema creation — graph was created via Savanna GSQL Editor."""
+    print(f"📐 Schema for '{GRAPH}' already exists (created via Savanna UI) — skipping.")
 
 
 def _upsert_vertices(nx_graph: nx.DiGraph) -> int:
@@ -117,7 +106,7 @@ def _upsert_vertices(nx_graph: nx.DiGraph) -> int:
             }
         }
         r = requests.post(
-            f"{BASE_URL}/graph/{GRAPH}",
+            f"{BASE_URL}{RESTATUS_PREFIX}/graph/{GRAPH}",
             headers=HEADERS,
             json=payload,
             timeout=30,
@@ -165,7 +154,7 @@ def _upsert_edges(nx_graph: nx.DiGraph) -> int:
             }
         }
         r = requests.post(
-            f"{BASE_URL}/graph/{GRAPH}",
+            f"{BASE_URL}{RESTATUS_PREFIX}/graph/{GRAPH}",
             headers=HEADERS,
             json=payload,
             timeout=30,
@@ -184,7 +173,7 @@ def _verify_load(expected_nodes: int, expected_edges: int) -> None:
     print("✅ Verifying upload ...")
     try:
         r = requests.get(
-            f"{BASE_URL}/graph/{GRAPH}/vertices/Entity?count_only=true",
+            f"{BASE_URL}{RESTATUS_PREFIX}/graph/{GRAPH}/vertices/Entity?count_only=true",
             headers=HEADERS, timeout=10,
         )
         if r.status_code == 200:
@@ -197,7 +186,7 @@ def _verify_load(expected_nodes: int, expected_edges: int) -> None:
 
     try:
         r = requests.get(
-            f"{BASE_URL}/graph/{GRAPH}/edges?count_only=true",
+            f"{BASE_URL}{RESTATUS_PREFIX}/graph/{GRAPH}/edges?count_only=true",
             headers=HEADERS, timeout=10,
         )
         if r.status_code == 200:
