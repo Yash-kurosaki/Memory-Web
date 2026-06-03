@@ -1,0 +1,31 @@
+Scenario ID,Query (truncated),Winner,GraphRAG Tokens,Basic RAG Tokens,LLM-Only Tokens,Token Reduction %,Judge Pass,Judge Score,BERTScore F1,GraphRAG Latency,GraphRAG Cost
+SCN-001,Who is the ultimate beneficial owner of Meridian Holdings Lt…,LLM-Only,576,1638,356,64.8%,✅ PASS,0.6565,0.8800,1.92s,$0.000053
+SCN-002,Does Vertex Capital have any indirect exposure to sanctioned…,LLM-Only,616,1629,297,62.2%,✅ PASS,0.8122,0.8750,3.14s,$0.000052
+SCN-003,What links Horizon Group to sanctioned activities?,LLM-Only,563,1667,429,66.2%,✅ PASS,0.8653,0.7943,1.95s,$0.000057
+SCN-004,What is the shortest exposure chain between Jonathan Doe and…,GraphRAG,276,1687,403,83.6%,✅ PASS,0.7849,0.9700,1.63s,$0.000034
+SCN-005,Who are the real beneficiaries behind the Cayman Islands tru…,GraphRAG,330,1675,698,80.3%,❌ FAIL,0.6116,0.9229,1.91s,$0.000049
+SCN-006,Map all entities within 2 degrees of separation from the san…,GraphRAG,538,1677,776,67.9%,✅ PASS,0.6149,0.9700,2.34s,$0.000087
+SCN-007,Does Helios Maritime connect to any politically exposed pers…,GraphRAG,228,1685,229,86.5%,✅ PASS,0.7440,0.8445,1.71s,$0.000026
+SCN-008,Is there a circular ownership loop involving Orion Ventures?,GraphRAG,217,1636,272,86.7%,✅ PASS,0.8290,0.9463,1.32s,$0.000026
+SCN-009,Trace the transaction flow from Baltic Import Ltd to any san…,GraphRAG,252,1671,703,84.9%,✅ PASS,0.7558,0.9656,1.27s,$0.000031
+SCN-010,Identify the ultimate controlling person behind Northbridge …,GraphRAG,256,1623,451,84.2%,✅ PASS,0.7244,0.9423,1.44s,$0.000031
+SCN-011,Which companies share bank account BA-77192 with Emerald Gat…,GraphRAG,212,1657,376,87.2%,✅ PASS,0.8314,0.8333,1.67s,$0.000023
+SCN-012,Show all shell companies registered by Blue Reef Corporate S…,GraphRAG,270,1659,768,83.7%,✅ PASS,0.8611,0.8651,1.87s,$0.000030
+SCN-013,Do Luma Capital and Granite Freight have overlapping directo…,LLM-Only,266,1647,220,83.8%,✅ PASS,0.7344,0.8467,1.71s,$0.000034
+SCN-014,Find the highest-risk cluster of entities sharing 88 Coral S…,GraphRAG,182,1669,919,89.1%,❌ FAIL,0.7156,0.7000,1.48s,$0.000018
+SCN-015,What is the cross-border chain from Lotus Finance to the san…,GraphRAG,267,1705,670,84.3%,✅ PASS,0.6193,0.9700,1.84s,$0.000031
+SCN-016,Is Atlas Medical Supplies ultimately controlled by any sanct…,GraphRAG,266,1642,290,83.8%,✅ PASS,0.8212,0.8909,1.52s,$0.000034
+SCN-017,Which entities are central in rapid pass-through transfers l…,GraphRAG,232,1639,517,85.8%,✅ PASS,0.6722,0.9333,1.56s,$0.000027
+SCN-018,Does Meridian Health Ventures have indirect exposure to any …,GraphRAG,233,1677,396,86.1%,✅ PASS,0.5073,0.9208,1.46s,$0.000028
+SCN-019,Detect the layering pattern connecting Pinebridge Traders to…,GraphRAG,266,1655,734,83.9%,✅ PASS,0.8111,0.8783,1.68s,$0.000033
+SCN-020,How many shell layers exist between Crescent Bio Ltd and its…,GraphRAG,267,1669,307,84.0%,✅ PASS,0.7296,0.8451,1.66s,$0.000034
+SCN-021,Which entities share the same sanctioned counterparty as Alt…,GraphRAG,198,1655,457,88.0%,✅ PASS,0.7415,0.8800,1.48s,$0.000021
+SCN-022,Trace any influence chain from PEP Natalia Sokolova to Westb…,GraphRAG,230,1668,670,86.2%,✅ PASS,0.6526,0.9510,1.29s,$0.000026
+SCN-023,How does sanctions risk propagate from Arctic Minerals PLC t…,GraphRAG,213,1041,621,79.5%,✅ PASS,0.6885,0.8388,1.54s,$0.000024
+SCN-024,Are there board interlocks between sanctioned firms and Nova…,GraphRAG,193,1684,227,88.5%,✅ PASS,0.7953,0.8800,1.72s,$0.000020
+SCN-025,Is the connection between Crownline Energy and Red Banner Me…,GraphRAG,222,1668,280,86.7%,✅ PASS,0.6181,0.9700,1.34s,$0.000025
+SCN-026,Which offshore jurisdictions appear in the chain behind Beac…,GraphRAG,283,1650,391,82.8%,✅ PASS,0.9364,0.7364,1.83s,$0.000037
+SCN-027,Does Summit Advisory Group have multiple final beneficiaries…,GraphRAG,225,1632,257,86.2%,✅ PASS,0.8343,0.9061,1.10s,$0.000027
+SCN-028,Find any laundering path involving correspondent banks betwe…,GraphRAG,252,1668,769,84.9%,✅ PASS,0.8115,0.8757,1.33s,$0.000031
+SCN-029,Which single entity acts as the bridge between Sunrise Commo…,GraphRAG,258,1628,300,84.2%,✅ PASS,0.8380,0.9019,1.27s,$0.000032
+SCN-030,Who ultimately controls the entities in the Lagoon Ventures …,GraphRAG,197,1639,509,88.0%,✅ PASS,0.5413,0.8140,1.20s,$0.000021
